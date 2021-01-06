@@ -2,6 +2,21 @@
 #include "ui_mainwindow.h"
 #include <QLayout>
 #include <QDebug>
+#include <QString>
+
+int MainWindow::toNum(QString s)
+{
+
+
+    char*  ch;
+    QByteArray ba = s.toLatin1(); // must
+    ch=ba.data();
+
+    int res = 0;
+    for(int i = 10; i < 14; i ++)
+           res = (res << 4) + (ch[i] - ('0' <= s[i] && s[i] <= '9'? '0': 'a' - 10));
+    return res;
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -84,9 +99,19 @@ void MainWindow::receiveInfo()
 
     //m_serialPort->write();
 
+    QByteArray str = info.toHex();
+    QString s = str;
     qDebug()<<"receive info:"<<info;
+    qDebug() << str;
+    qDebug() << 1.0 * toNum(s) / 100.0 << "\n";
+
+
 }
 
 
 
 
+void MainWindow::on_lineEdit_textChanged(const QString &arg1)
+{
+
+}

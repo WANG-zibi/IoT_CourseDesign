@@ -7,6 +7,7 @@
 #include <QSerialPortInfo>
 #include <QComboBox>
 #include <QPushButton>
+#include <QString>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,6 +20,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void initUI();
+    int toNum(QString);
 
     QStringList getPortNameList();//获取所有可用的串口列表
 
