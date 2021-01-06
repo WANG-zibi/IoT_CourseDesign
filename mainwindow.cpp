@@ -35,6 +35,7 @@ void MainWindow::initUI()
     QHBoxLayout *m_layout = new QHBoxLayout();
     m_layout->addWidget(m_PortNameComboBox);
     m_layout->addWidget(m_OpenPortButton);
+
     QWidget * widget = new QWidget ();
     widget->setLayout(m_layout);
     this-> setCentralWidget(widget) ;
