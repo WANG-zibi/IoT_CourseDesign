@@ -6,15 +6,15 @@
 
 int MainWindow::toNum(QString s)
 {
-
-
-    char*  ch;
-    QByteArray ba = s.toLatin1(); // must
-    ch=ba.data();
+    char* ch;
+    QByteArray ba = s.toLatin1(); //must
+    ch = ba.data();
 
     int res = 0;
     for(int i = 10; i < 14; i ++)
+      {
            res = (res << 4) + (ch[i] - ('0' <= s[i] && s[i] <= '9'? '0': 'a' - 10));
+      }
     return res;
 }
 
@@ -96,22 +96,13 @@ void MainWindow::openPort()
 void MainWindow::receiveInfo()
 {
     QByteArray info = m_serialPort->readAll();
-
     //m_serialPort->write();
-
     QByteArray str = info.toHex();
     QString s = str;
     qDebug()<<"receive info:"<<info;
     qDebug() << str;
     qDebug() << 1.0 * toNum(s) / 100.0 << "\n";
-
-
 }
 
 
 
-
-void MainWindow::on_lineEdit_textChanged(const QString &arg1)
-{
-
-}

@@ -21,9 +21,7 @@ public:
     ~MainWindow();
     void initUI();
     int toNum(QString);
-
     QStringList getPortNameList();//获取所有可用的串口列表
-
     void openPort();//打开串口
 public slots:
     void receiveInfo();

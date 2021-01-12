@@ -3,7 +3,15 @@
 
 serialport::serialport()
 {
+    isLighting = false;
+    isHot = false;
     m_portNameList = getPortNameList();
+    //初始化四个串口基类
+    for(int i = 0;i<4;i++)
+    {
+        SerialPorts[i] = new QSerialPort();
+        SerialPorts[i]->setPortName(m_portNameList[i]);
+    }
 }
 
 QStringList serialport::getPortNameList()
@@ -17,20 +25,7 @@ QStringList serialport::getPortNameList()
     return m_serialPortName;
 }
 
-void serialport::ReceiveInfo(QSerialPort* m_serialPort)
-{
-            QByteArray info = m_serialPort->readAll();
-            QByteArray hexData = info.toHex();
-            //这里面的协议 你们自己定义就行  单片机发什么 代表什么 我们这里简单模拟一下
-            if(hexData == "0x10000")
-            {
-                //do something
-            }
-            else if(hexData  == "0x100001")
-            {
-                //do something
-            }
-}
+
 
 void serialport::sendInfo(char *info, int len,QSerialPort* m_serialPort)
 {
@@ -39,6 +34,23 @@ void serialport::sendInfo(char *info, int len,QSerialPort* m_serialPort)
                 printf("0x%x\n", info[i]);
             }
     m_serialPort->write(info,len);//这句是真正的给单片机发数据 用到的是QIODevice::write 具体可以看文档
+}
+
+void serialport::ReceiveInfoFromLight()
+{
+    auto info = SerialPorts[1]->readAll();
+    QByteArray hexData = info.toHex();
+    float curLight = (hexData[5]*256 + hexData[6]) / 100.0;
+    //存入数据库
+}
+
+void serialport::ReceiveInfoFromTem()
+{
+    auto info = SerialPorts[2]->readAll();
+    QByteArray hexData = info.toHex();
+    float curTemperature = (hexData[5]*256 + hexData[6]) / 100.0;
+    float curTumidity = (hexData[6]*256 + hexData[7]) / 100.0;
+    //存入数据库
 }
 
 void serialport::sendInfo(QString&& info,QSerialPort* m_serialPort)
@@ -62,7 +74,6 @@ void serialport::convertStringToHex(const QString &str, QByteArray &byteData)
         char lstr,hstr;
         for(int i=0; i<len; )
         {
-            //char lstr,
             hstr=str[i].toLatin1();
             if(hstr == ' ')
             {
