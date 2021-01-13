@@ -25,23 +25,16 @@ QStringList serialport::getPortNameList()
     return m_serialPortName;
 }
 
-
-
-void serialport::sendInfo(char *info, int len,QSerialPort* m_serialPort)
-{
-    for(int i=0; i<len; ++i)
-            {
-                printf("0x%x\n", info[i]);
-            }
-    m_serialPort->write(info,len);//这句是真正的给单片机发数据 用到的是QIODevice::write 具体可以看文档
-}
-
 void serialport::ReceiveInfoFromLight()
 {
     auto info = SerialPorts[1]->readAll();
     QByteArray hexData = info.toHex();
     float curLight = (hexData[5]*256 + hexData[6]) / 100.0;
-    //存入数据库
+
+    if(curLight <400  && curLight > 200)
+    {
+        //存入数据库
+    }
 }
 
 void serialport::ReceiveInfoFromTem()
@@ -51,19 +44,19 @@ void serialport::ReceiveInfoFromTem()
     float curTemperature = (hexData[5]*256 + hexData[6]) / 100.0;
     float curTumidity = (hexData[6]*256 + hexData[7]) / 100.0;
     //存入数据库
+    if(curTemperature > -20 && curTemperature < 40)
+    {
+
+    }
+
+    if(curTumidity > 0 && curTumidity < 100)
+    {
+
+    }
 }
 
-void serialport::sendInfo(QString&& info,QSerialPort* m_serialPort)
-{
-        QByteArray sendBuf;
-        if (info.contains(" "))
-        {
-            info.replace(QString(" "),QString(""));//我这里是把空格去掉，根据你们定的协议来
-        }
-        qDebug()<<"Write to serial: "<<info;
-        convertStringToHex(info, sendBuf); //把QString 转换 为 hex
-        m_serialPort->write(sendBuf);
-}
+
+
 
 void serialport::convertStringToHex(const QString &str, QByteArray &byteData)
 {

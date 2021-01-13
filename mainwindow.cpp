@@ -1,108 +1,60 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QLayout>
-#include <QDebug>
-#include <QString>
-
-int MainWindow::toNum(QString s)
-{
-    char* ch;
-    QByteArray ba = s.toLatin1(); //must
-    ch = ba.data();
-
-    int res = 0;
-    for(int i = 10; i < 14; i ++)
-      {
-           res = (res << 4) + (ch[i] - ('0' <= s[i] && s[i] <= '9'? '0': 'a' - 10));
-      }
-    return res;
-}
-
+#include<QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    DBController = DataBaseController::GetInstance();
+    DBController->init();
     ui->setupUi(this);
-    m_serialPort = new QSerialPort();
-    initUI();
-    m_portNameList = getPortNameList();
-    m_PortNameComboBox->addItems(m_portNameList);
-    connect(m_OpenPortButton,&QPushButton::clicked,this,&MainWindow::openPort);
+    setWindowTitle("智能家居系统");
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
 {
-    if (m_serialPort->isOpen())
-    {
-        m_serialPort->close();
-    }
-    delete m_serialPort;
-
     delete ui;
 }
 
-void MainWindow::initUI()
+void MainWindow::update()
 {
-    this->setWindowTitle("test QSerialPort");
-    m_OpenPortButton = new QPushButton();
-    m_OpenPortButton->setText("打开串口");
-    m_PortNameComboBox  = new QComboBox();
-    QHBoxLayout *m_layout = new QHBoxLayout();
-    m_layout->addWidget(m_PortNameComboBox);
-    m_layout->addWidget(m_OpenPortButton);
+    updateData();
+    SetUI();
 
-    QWidget * widget = new QWidget ();
-    widget->setLayout(m_layout);
-    this-> setCentralWidget(widget) ;
-}
-
-QStringList MainWindow::getPortNameList()
-{
-    QStringList m_serialPortName;
-    foreach(const QSerialPortInfo &info,QSerialPortInfo::availablePorts())
+    if(light <100.0f)
     {
-        m_serialPortName << info.portName();
-        qDebug()<<"serialPortName:"<<info.portName();
+        //开灯
     }
-    return m_serialPortName;
-}
-
-void MainWindow::openPort()
-{
-    if(m_serialPort->isOpen())//如果串口已经打开了 先给他关闭了
+    else
     {
-        m_serialPort->clear();
-        m_serialPort->close();
+        //关灯
     }
-    m_serialPort->setPortName(m_PortNameComboBox->currentText());//当前选择的串口名字
-
-    if(!m_serialPort->open(QIODevice::ReadWrite))//用ReadWrite 的模式尝试打开串口
+    if(tem > 30.0f)
     {
-        qDebug()<<"打开失败!";
-        return;
+        //开空调
     }
-    qDebug()<<"串口打开成功!";
+    else
+    {
+        //关空调
+    }
 
-    m_serialPort->setBaudRate(QSerialPort::Baud115200,QSerialPort::AllDirections);//设置波特率和读写方向
-    m_serialPort->setDataBits(QSerialPort::Data8);      //数据位为8位
-    m_serialPort->setFlowControl(QSerialPort::NoFlowControl);//无流控制
-    m_serialPort->setParity(QSerialPort::NoParity); //无校验位
-    m_serialPort->setStopBits(QSerialPort::OneStop); //一位停止位
-
-    connect(m_serialPort,SIGNAL(readyRead()),this,SLOT(receiveInfo()));
 }
 
-//接收到单片机发送的数据进行解析
-void MainWindow::receiveInfo()
+void MainWindow::SetUI()
 {
-    QByteArray info = m_serialPort->readAll();
-    //m_serialPort->write();
-    QByteArray str = info.toHex();
-    QString s = str;
-    qDebug()<<"receive info:"<<info;
-    qDebug() << str;
-    qDebug() << 1.0 * toNum(s) / 100.0 << "\n";
+    ui->lineEdit->setText(QString::number(tem));
+    ui->lineEdit_2->setText(QString::number(ham));
+    ui->lineEdit_3->setText(QString::number(light));
 }
 
-
+void MainWindow::updateData()
+{
+    tem = Simulator::GenerateTemperature();
+    ham = Simulator::GenerateHumidity();
+    light = Simulator::GenerateLightIntensity();
+    DBController->InsertData(QDate::currentDate().toString(),QTime::currentTime().toString(),tem,ham);
+}
 
