@@ -4,7 +4,6 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 #include <QString>
-
 class DataBaseController
 {
 public:
