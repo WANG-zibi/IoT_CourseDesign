@@ -69,9 +69,9 @@ QSqlQuery sql_query;
         qDebug() << "inserted!";
     }
 }
-
-void DataBaseController::QueryData()
+QList<QPointF> DataBaseController::QueryData()
 {
+    QList<QPointF > data;
     QSqlQuery sql_query;
     QString select_all_sql = "select * from Tem";
     sql_query.prepare(select_all_sql);
@@ -83,13 +83,42 @@ void DataBaseController::QueryData()
     {
         while(sql_query.next())
         {
-            //to do something
+              int id = sql_query.value(0).toInt();
+              float tem = sql_query.value(3).toFloat();
+              data.push_back(QPointF(id,tem));
 //            int id = sql_query.value(0).toInt();
 //            QString name = sql_query.value(1).toString();
 //            int age = sql_query.value(2).toInt();
 //            qDebug()<<QString("id:%1    name:%2    age:%3").arg(id).arg(name).arg(age);
         }
     }
+    return data;
+}
+
+QPointF DataBaseController::QueryPoint()
+{
+    QPointF data;
+    QSqlQuery sql_query;
+    QString select_all_sql = "select * from Tem";
+    sql_query.prepare(select_all_sql);
+    if(!sql_query.exec())
+    {
+        qDebug()<<sql_query.lastError();
+    }
+    else
+    {
+        while(sql_query.next())
+           {
+              int id = sql_query.value(0).toInt();
+              float tem = sql_query.value(3).toFloat();
+//            int id = sql_query.value(0).toInt();
+//            QString name = sql_query.value(1).toString();
+//            int age = sql_query.value(2).toInt();
+//            qDebug()<<QString("id:%1    name:%2    age:%3").arg(id).arg(name).arg(age);
+              data = {(qreal)id,tem};
+           }
+    }
+    return data;
 }
 
 DataBaseController::~DataBaseController()

@@ -2,7 +2,7 @@ QT       += core gui
 QT       += serialport
 QT       +=sql
 INCLUDEPATH+=D:\Eigen
-
+QT       += charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chart.cpp \
     databasecontroller.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     simulator.cpp
 
 HEADERS += \
+    chart.h \
     databasecontroller.h \
     mainwindow.h \
     serialport.h \

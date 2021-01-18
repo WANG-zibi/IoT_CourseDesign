@@ -4,6 +4,8 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 #include <QString>
+#include <QVector>
+#include <QPoint>
 class DataBaseController
 {
 public:
@@ -20,7 +22,8 @@ public:
     void init(void);
     void CreateTable();
     void InsertData(QString date,QString time,float tem,float humidity);
-    void QueryData();
+    QList<QPointF > QueryData();
+    QPointF QueryPoint();
     void DeleteData();
     void UpdateData();
 private:
