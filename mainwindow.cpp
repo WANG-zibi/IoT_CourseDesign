@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QPixmap>
 #include<QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -12,50 +13,33 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("智能家居系统");
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    initGraph();
+    timer->start(1000);
+    DateUpdate();
+    TimeUpdate();
+    w_graph = new Graph();
+    w_Room = new RoomControl;
+    w_model = new Model;
+    QPixmap b1(":/new/prefix1/images/button/control.png");
+    QPixmap b2(":/new/prefix1/images/button/setting.png");
+    QPixmap b3(":/new/prefix1/images/button/statistics.png");
+    ui->pushButton->setIcon(b1);
+    ui->pushButton_3->setIcon(b2);
+    ui->pushButton_4->setIcon(b3);
+    //initGraph();
 }
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::RealtimeDataSlot()
-{
-    qreal y = 1.0;
-    m_x += y;
-    //m_y=sin(m_x);
-    m_series.append(m_x,(double)tem);
-    chart.scroll(5,0);
-}
+
 void MainWindow::update()
 {
     updateData();
-    SetUI();
+    DateUpdate();
+    TimeUpdate();
 
-    if(light <100.0f)
-    {
-        //开灯
-    }
-    else
-    {
-        //关灯
-    }
-    if(tem > 30.0f)
-    {
-        //开空调
-    }
-    else
-    {
-        //关空调
-    }
 
-}
-
-void MainWindow::SetUI()
-{
-    ui->lineEdit->setText(QString::number(tem));
-    ui->lineEdit_2->setText(QString::number(ham));
-    ui->lineEdit_3->setText(QString::number(light));
 }
 
 void MainWindow::updateData()
@@ -66,33 +50,30 @@ void MainWindow::updateData()
     DBController->InsertData(QDate::currentDate().toString(),QTime::currentTime().toString(),tem,ham);
 }
 
-void MainWindow::initGraph()
+void MainWindow::DateUpdate()
 {
-    connect(timer,SIGNAL(timeout()),this,SLOT(RealtimeDataSlot()));
-    timer->start(1000);
-    m_x=0;
-    m_y=0;
-    chart.setTheme(QChart::ChartThemeBlueCerulean);//设置系统主题
-    chart.setTitle("温度变化图");//设置标题
-    chart.setTitleFont(QFont("微软雅黑",10));
-    chart.legend()->hide();
-    QPen green(Qt::yellow);
-    green.setWidth(2);
-    m_series.setPen(green);
-    m_series.append(m_x, m_y);
-    chart.addSeries(&m_series);
-    chart.createDefaultAxes();
-    //chart.setAxisX(&m_axis,&m_series);
-    m_axis.setTickCount(5);
-    chart.axisX()->setRange(0,20);
-    chart.axisX()->setTitleText("时间");
-    chart.axisY()->setRange(0, 40);
-    chart.axisY()->setTitleText("温度");
-    QChartView *chartView = new QChartView(&chart);
-    QGridLayout *baseLayout = new QGridLayout();
-    baseLayout->addWidget(chartView, 0, 0);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    ui->verticalLayout->addLayout(baseLayout);
-
+ ui->hh->setText(QTime::currentTime().toString("hh"));
+ ui->ss->setText(QTime::currentTime().toString("mm"));
 }
 
+void MainWindow::TimeUpdate()
+{
+    ui->year->setText(QDate::currentDate().toString("yyyy年MM月dd日"));
+    ui->week->setText(QDate::currentDate().toString("dddd"));
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    w_Room->show();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    w_model->show();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    w_graph->show();
+}

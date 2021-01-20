@@ -1,2 +1,27 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>images/curtain/curtain_close.png</file>
+        <file>images/curtain/curtain_open.png</file>
+        <file>images/curtain/curtain_stop.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix2">
+        <file>images/light/light_bulb_48.233009708738px_1185650_easyicon.net.png</file>
+        <file>images/light/light_off.png</file>
+        <file>images/light/light_off1.png</file>
+        <file>images/light/light_on.png</file>
+        <file>images/light/light_on1.png</file>
+        <file>images/light/temp_add.png</file>
+        <file>images/light/temp_sub.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1">
+        <file>images/button/control.png</file>
+        <file>images/button/setting.png</file>
+        <file>images/button/statistics.png</file>
+        <file>images/button/kongtiao.png</file>
+    </qresource>
+    <qresource prefix="/new/pic">
+        <file>images/curtain/curtain_close.png</file>
+        <file>images/curtain/curtain_open.png</file>
+        <file>images/curtain/curtain_stop.png</file>
+    </qresource>
+</RCC>

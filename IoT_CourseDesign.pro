@@ -18,22 +18,37 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    chart.cpp \
     databasecontroller.cpp \
+    graph.cpp \
+    guangmin.cpp \
     main.cpp \
     mainwindow.cpp \
+    model.cpp \
+    roomcontrol.cpp \
     serialport.cpp \
-    simulator.cpp
+    shidu_0.cpp \
+    simulator.cpp \
+    switchbutton.cpp \
+    windu.cpp
 
 HEADERS += \
-    chart.h \
     databasecontroller.h \
+    graph.h \
+    guangmin.h \
     mainwindow.h \
+    model.h \
+    roomcontrol.h \
     serialport.h \
-    simulator.h
+    shidu_0.h \
+    simulator.h \
+    switchbutton.h \
+    windu.h
 
 FORMS += \
-    mainwindow.ui
+    graph.ui \
+    mainwindow.ui \
+    model.ui \
+    roomcontrol.ui
 
 TRANSLATIONS += \
     untitled2_zh_CN.ts
@@ -42,3 +57,8 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=
+
+RESOURCES += \
+    pictrue.qrc

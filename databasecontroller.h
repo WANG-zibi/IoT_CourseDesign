@@ -19,10 +19,11 @@ public:
         }
         return _instance;
     }
+
     void init(void);
     void CreateTable();
     void InsertData(QString date,QString time,float tem,float humidity);
-    QList<QPointF > QueryData();
+    QList<QPointF> QueryData();
     QPointF QueryPoint();
     void DeleteData();
     void UpdateData();

@@ -1,16 +1,30 @@
-#ifndef WINDU_H
-#define WINDU_H
+#ifndef WENDU_H
+#define WENDU_H
 
 #include <QObject>
+#include <QDebug>
 
-class windu : public QObject
+class wendu : public QObject
 {
     Q_OBJECT
 public:
-    explicit windu(QObject *parent = nullptr);
+
+    ~wendu(){
+
+        qDebug() << "wendu destroyed!\n";
+    }
+    wendu(const wendu&)=delete;
+    wendu& operator=(const wendu&)=delete;
+    static wendu& get_wendu();
+    double num;
+
+private:
+    explicit wendu(QObject *parent = nullptr);
+
 
 signals:
 
+    public slots:
 };
 
-#endif // WINDU_H
+#endif // WENDU_H

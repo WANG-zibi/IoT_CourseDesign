@@ -9,16 +9,9 @@
 #include <QTimer>
 #include <QTime>
 #include <QDate>
-#include <QtCharts/QChartView>//显示图表
-#include <QtCharts/QLineSeries>//线系列
-#include <QDoubleSpinBox>
-#include <QGridLayout>
-#include <QTimer>
-#include <QtCharts/QSplineSeries>
-#include <QtCharts/QValueAxis>
-
-
-QT_CHARTS_USE_NAMESPACE
+#include "graph.h"
+#include "roomcontrol.h"
+#include "model.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -34,24 +27,27 @@ public:
 
 private  slots:
     void update();
-    void RealtimeDataSlot();
+    void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
+
 private:
     void SetUI();
     void updateData();
     void initGraph();
+    void DateUpdate();
+    void TimeUpdate();
     Ui::MainWindow *ui;
     DataBaseController* DBController;
     float tem;
     float ham;
     float light;
     QTimer *timer;
+    Graph* w_graph;
+    RoomControl* w_Room;
+    Model* w_model;
 
-    QChart chart;
-    QSplineSeries m_series;
-    QStringList m_titles;
-    QValueAxis m_axis;
-    qreal m_step;
-    qreal m_x;
-    qreal m_y;
 };
 #endif // MAINWINDOW_H
