@@ -30,6 +30,8 @@ RoomControl::RoomControl(QWidget *parent) :
     connect(ui->pushButton_3,&SwitchButton::statusChanged,this,&RoomControl::onLight3Clicked);
     pre_windu = 0;
     pre_shidu = 0;
+    windu = 0;
+    shidu = 0;
 }
 
 RoomControl::~RoomControl()
@@ -55,6 +57,7 @@ void RoomControl::onclicked(bool isopen)
 void RoomControl::update()
 {
     ui->lcdNumber->display(100);
+
 }
 
 void RoomControl::onLight1Clicked(bool isOpen)

@@ -47,10 +47,42 @@ void Graph::RealtimeDataSlot() //在这里设置温湿度
     //m_y=sin(m_x);
     double nowTem; //当前温度
     double nowshi; //当前湿度
-
+    nowTem =10;
+    nowshi = 30;
     m_series.append(m_x,nowTem);
     m_series1.append(m_x,nowshi);
     chart.scroll(5,0);
+    if(fit())
+    ui->label_2->setText("空调打开");
+    else ui->label_2->setText("空调关闭");
+}
+
+bool Graph::fit()
+{
+    QList<QPointF> data;
+    DataBaseController* DB_ptr = DataBaseController::GetInstance();
+    data = DB_ptr->QueryData();
+    if(data.empty()) return false;
+    QVector<QPointF> curdata;
+    if(data.size())
+    {
+    for(int i = data.size()-1; i >data.size() - 11;i--)
+    {
+        curdata.push_back(data[i]);
+    }}
+    else return 0;
+    double k=0;
+    double sum1,sumx,sumy,sumx2;
+    sum1 = sumx = sumy = sumx2 = 0;
+    for(auto i:curdata)
+    {
+        sum1+=i.rx()*i.ry();
+        sumx += i.rx(),sumy+= i.ry();
+        sumx2 +=i.rx()*i.rx();
+    }
+    k  = (10*sum1 - sumx*sumy) / (10*sumx2 - sumx*sumx);
+    if(k > 0) return true;
+    else return false;
 }
 Graph::~Graph()
 {

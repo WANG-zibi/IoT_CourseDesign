@@ -8,6 +8,8 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QGridLayout>
+#include "databasecontroller.h"
+
 QT_CHARTS_USE_NAMESPACE
 namespace Ui {
 class Graph;
@@ -21,6 +23,7 @@ public:
     explicit Graph(QWidget *parent = nullptr);
     ~Graph();
 private slots: void RealtimeDataSlot();
+
 private:
     Ui::Graph *ui;
     QTimer *timer;
@@ -32,6 +35,8 @@ private:
     qreal m_step;
     qreal m_x;
     qreal m_y;
+
+    bool fit();
 };
 
 #endif // GRAPH_H
