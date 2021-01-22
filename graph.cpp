@@ -1,6 +1,8 @@
 #include "graph.h"
 #include "ui_graph.h"
-#include "windu.h"
+#include "wendu.h"
+#include "shidu_0.h"
+
 Graph::Graph(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Graph)
@@ -10,7 +12,7 @@ Graph::Graph(QWidget *parent) :
         setWindowTitle("温湿度变化曲线图");
         timer = new QTimer;
         connect(timer,SIGNAL(timeout()),this,SLOT(RealtimeDataSlot()));
-        timer->start(1000);
+        timer->start(3000);
         m_x=0;
         m_y=0;
         chart.setTheme(QChart::ChartThemeBlueCerulean);//设置系统主题
@@ -32,13 +34,16 @@ Graph::Graph(QWidget *parent) :
         m_axis.setTickCount(5);
         chart.axisX()->setRange(0,20);
         chart.axisX()->setTitleText("时间");
-        chart.axisY()->setRange(0, 40);
+        chart.axisY()->setRange(0, 55);
         chart.axisY()->setTitleText("温湿度");
         QChartView *chartView = new QChartView(&chart);
         QGridLayout *baseLayout = new QGridLayout();
         baseLayout->addWidget(chartView, 0, 0);
         chartView->setRenderHint(QPainter::Antialiasing);
         ui->verticalLayout->addLayout(baseLayout);
+
+        QPixmap kongtiao(":/new/prefix1/images/button/kongtiao.png");
+        ui->kongtiao_2->setPixmap(kongtiao);
 }
 void Graph::RealtimeDataSlot() //在这里设置温湿度
 {
@@ -47,14 +52,24 @@ void Graph::RealtimeDataSlot() //在这里设置温湿度
     //m_y=sin(m_x);
     double nowTem; //当前温度
     double nowshi; //当前湿度
-    nowTem =10;
-    nowshi = 30;
+
+    wendu& wen = wendu :: get_wendu();
+    shidu_0& shi = shidu_0 :: get_shidu();
+    if(-300.0 < wen.num && wen.num < 30.0)
+        nowTem = wen.num;
+    if(shi.num >= 20.0)
+        nowshi = shi.num;
+    else {
+        nowshi = 40.0;
+    }
     m_series.append(m_x,nowTem);
     m_series1.append(m_x,nowshi);
-    chart.scroll(5,0);
+//    chart.scroll(5,0);
     if(fit())
-    ui->label_2->setText("空调打开");
-    else ui->label_2->setText("空调关闭");
+        ui->pushButton_6->change(true);
+    else {
+        ui->pushButton_6->change(false);
+    }
 }
 
 bool Graph::fit()
@@ -64,12 +79,13 @@ bool Graph::fit()
     data = DB_ptr->QueryData();
     if(data.empty()) return false;
     QVector<QPointF> curdata;
-    if(data.size())
+    if(data.size() > 11)
     {
     for(int i = data.size()-1; i >data.size() - 11;i--)
     {
         curdata.push_back(data[i]);
-    }}
+    }
+    }
     else return 0;
     double k=0;
     double sum1,sumx,sumy,sumx2;

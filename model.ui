@@ -65,7 +65,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>开启</string>
    </property>
   </widget>
   <widget class="SwitchButton" name="pushButton_2">
@@ -78,7 +78,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>开启</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">

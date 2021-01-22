@@ -29,7 +29,8 @@ SOURCES += \
     shidu_0.cpp \
     simulator.cpp \
     switchbutton.cpp \
-    windu.cpp
+    wendu.cpp \
+    led.cpp
 
 HEADERS += \
     databasecontroller.h \
@@ -42,7 +43,8 @@ HEADERS += \
     shidu_0.h \
     simulator.h \
     switchbutton.h \
-    windu.h
+    wendu.h \
+    led.h
 
 FORMS += \
     graph.ui \
@@ -62,3 +64,4 @@ DISTFILES +=
 
 RESOURCES += \
     pictrue.qrc
+LIBS += -lwiringPi

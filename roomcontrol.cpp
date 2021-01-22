@@ -1,15 +1,18 @@
 #include "roomcontrol.h"
 #include "ui_roomcontrol.h"
 #include<QDebug>
+#include "shidu_0.h"
+#include "guangmin.h"
+#include <math.h>
 
 
 RoomControl::RoomControl(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RoomControl)
 {
-    timer = new QTimer;
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1000);
+    timer = new QTimer(this);
+//    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+//    timer->start(1000);
     ui->setupUi(this);
     setWindowTitle("卧室");
     isCurtainOpen = false;
@@ -23,13 +26,30 @@ RoomControl::RoomControl(QWidget *parent) :
     SwitchButton* SB;
     QPixmap kongtiao(":/new/prefix1/images/button/kongtiao.png");
     ui->kongtiao->setPixmap(kongtiao);
-    SB = ui->pushButton;
+    SB = ui->pushButton_4;
     connect(SB,&SwitchButton::statusChanged,this,&RoomControl::onclicked);
     connect(ui->pushButton1,&SwitchButton::statusChanged,this,&RoomControl::onLight1Clicked);
     connect(ui->pushButton_2,&SwitchButton::statusChanged,this,&RoomControl::onLight2Clicked);
     connect(ui->pushButton_3,&SwitchButton::statusChanged,this,&RoomControl::onLight3Clicked);
-    pre_windu = 0;
-    pre_shidu = 0;
+
+
+
+//    QTimer *timer = new QTimer(this);
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(3000);
+
+
+    wendu& wen = wendu :: get_wendu();
+    shidu_0& shi = shidu_0 :: get_shidu();
+
+    ui->lcdNumber_4->display(int(wen.num));
+    while(shi.num == 0){
+        shidu_0& shi = shidu_0 :: get_shidu();
+    }
+    ui->lcdNumber_3->display(int(shi.num));
+    pre_windu = wen.num;
+    pre_shidu = shi.num;
     windu = 0;
     shidu = 0;
 }
@@ -58,15 +78,47 @@ void RoomControl::update()
 {
     ui->lcdNumber->display(100);
 
+    wendu& wen = wendu :: get_wendu();
+    shidu_0& shi = shidu_0 ::get_shidu();
+
+     guangmin& guang = guangmin :: get_guangmin();
+    double num_wen,
+           num_shi,
+           num_guang = 300 - guang.num;
+    if(wen.num != -300.0)
+        num_wen = wen.num;
+    if(num_shi != 0)
+        num_shi = shi.num;
+
+
+    ui->lcdNumber_2->display(num_shi);
+    ui->lcdNumber->display(num_wen);
+    ui->lcdNumber_5->display(num_guang);
+    if(num_guang >= 180.0)
+        ui->pushButton_4->change(true);
+    else
+        ui->pushButton_4->change(false);
+    double need_wen = ui->lcdNumber_4->value(), need_shi = ui->lcdNumber_3->value();
+    if((fabs(need_wen - num_wen) <= 1.5) && (fabs(need_shi - num_shi) <= 2))
+        ui->pushButton_5->change(false);
+    else
+        ui->pushButton_5->change(true);
+
+//    qDebug() << ui->lcdNumber->value();
 }
 
 void RoomControl::onLight1Clicked(bool isOpen)
 {
+
     if(isOpen)
     {
+        led& ld = led :: led_lighten();
         ui->deng1->setPixmap(dengOn);
     }
-    else ui->deng1->setPixmap(dengOff);
+    else{
+       led& ld = led :: led_crash_out();
+        ui->deng1->setPixmap(dengOff);
+    }
 }
 
 void RoomControl::onLight2Clicked(bool isOpen)
@@ -91,6 +143,7 @@ void RoomControl::onLight3Clicked(bool isOpen)
 void RoomControl::on_plus_clicked()
 {
     pre_windu++;
+
     ui->lcdNumber_4->display(pre_windu);
 }
 
@@ -113,3 +166,5 @@ void RoomControl::on_sub_2_clicked()
     if(pre_shidu<0) pre_shidu = 0;
     ui->lcdNumber_3->display(pre_shidu);
 }
+
+

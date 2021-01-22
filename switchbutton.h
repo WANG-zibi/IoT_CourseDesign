@@ -71,6 +71,7 @@ public:
     int step()                  const;
     int startX()                const;
     int endX()                  const;
+    void change(const bool status);
 
 
 public Q_SLOTS:

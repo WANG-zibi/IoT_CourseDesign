@@ -1,8 +1,9 @@
 #pragma execution_character_set("utf-8")
 #include <qpushbutton.h>
-#include "SwitchButton.h"
+#include "switchbutton.h"
 #include <QPainter>
 #include <QDebug>
+
 
 SwitchButton::SwitchButton(QWidget *parent) : QWidget(parent)
 {
@@ -341,6 +342,34 @@ void SwitchButton::setTextOff(const QString &text)
     }
 }
 
+void SwitchButton::change(const bool status)
+{
+    if(m_checked == status)   return;
+    m_checked = !m_checked;
+
+    emit statusChanged(m_checked);
+    //计算步长
+    m_step = width() / 10;
+
+    //计算滑块X轴终点坐标
+    if (m_checked)
+    {
+        m_endX = width() - height();
+    } else
+    {
+        m_endX = 0;
+    }
+    //判断是否使用动画
+    if (m_animation)
+    {
+        m_timer->start();
+    }
+    else
+    {
+        m_startX = m_endX;
+        update();
+    }
+}
 //void SwitchButton::setStep(int step)
 //{
 //    if (m_step != step) {
